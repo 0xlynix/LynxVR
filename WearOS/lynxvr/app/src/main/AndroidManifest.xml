@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
+    <!-- BODY_SENSORS_BACKGROUND is needed for Sensor Data "Always Allow" permission to show up. -->
+    <uses-permission android:name="android.permission.BODY_SENSORS_BACKGROUND" />
+
     <uses-feature android:name="android.hardware.type.watch" />
 
     <application

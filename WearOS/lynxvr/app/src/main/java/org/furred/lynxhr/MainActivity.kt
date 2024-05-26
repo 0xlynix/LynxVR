@@ -1,10 +1,12 @@
 package org.furred.lynxhr
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
 import android.content.pm.PackageManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Bundle
 import android.text.format.Formatter
 import android.util.Log
@@ -76,6 +78,19 @@ class MainActivity : Activity() {
             ) == PackageManager.PERMISSION_DENIED
         ) {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BODY_SENSORS), 100)
+        }
+
+        /* This is a protected permission so chances are a dialog won't even pop up, however the
+         * user can set it on their own in their watch app settings. This will only run on
+         * Android 13+ */
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.BODY_SENSORS_BACKGROUND
+                ) == PackageManager.PERMISSION_DENIED
+            ) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.BODY_SENSORS_BACKGROUND), 100)
+            }
         }
 
         startButton = findViewById(R.id.buttonStartStop)
@@ -198,11 +213,12 @@ class MainActivity : Activity() {
         }
     }
 
+    @SuppressLint("StringFormatMatches") // Suspicious Linting making intelliJ very mad?
     fun updateHeartRate(heartrate: Int) {
-
 
         textCurrentHr.text = resources.getString(R.string.text_current_hr, heartrate)
         textCurrentHr.invalidate()
+
     }
 
     private fun updateStatus(status: String?) {
